@@ -1,0 +1,2 @@
+rm -rf ../doc/*
+javadoc -d ../doc ../src/main/java/ct/dc/libinfrastructure/*.java ../src/main/java/ct/dc/libinfrastructure/*/*.java -author -notree -nodeprecatedlist -charset utf-8 -helpfile readme.html
