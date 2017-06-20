@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="generator" content="ReText 7.0.0">
+<title>新建文档</title>
+</head>
+<body>
+<h3>1. Maven接入</h3>
+<h4>1.1. 仓库源</h4>
+<p>修改setting.xml</p>
+<pre><code>&lt;mirrors&gt;
+    &lt;mirror&gt;
+        &lt;id&gt;ctdcmaven&lt;/id&gt;
+        &lt;name&gt;ctdc maven&lt;/name&gt;
+        &lt;url&gt;http://192.168.1.3:8081/nexus/content/repositories/maven-big-data-public/&lt;/url&gt;
+        &lt;mirrorOf&gt;*&lt;/mirrorOf&gt;
+    &lt;/mirror&gt;
+&lt;/mirrors&gt;
+</code></pre>
+
+<h4>1.2. POM.xml</h4>
+<pre><code>&lt;dependencies&gt;
+    &lt;groupId&gt;ct.dc.infrastructure&lt;/groupId&gt;
+    &lt;artifactId&gt;libinfrastructure&lt;/artifactId&gt;
+    &lt;version&gt;1.2.2-RELEASE&lt;/version&gt;
+&lt;/dependencies&gt;
+</code></pre>
+
+<h2>2. 功能说明</h2>
+<ul>
+<li>IP组件<ul>
+<li>获取IPv4</li>
+<li>ip与long之间互转</li>
+<li>ip与int之间互转</li>
+</ul>
+</li>
+<li>字符串组件<ul>
+<li>判断是否为空</li>
+<li>判断是否为数字</li>
+<li>判断是否为电子邮件</li>
+<li>判断是否为身份证ID</li>
+</ul>
+</li>
+<li>Http通讯组件<ul>
+<li>Http GET操作</li>
+<li>Http Post操作</li>
+</ul>
+</li>
+<li>加密组件<ul>
+<li>md5加密</li>
+<li>aes加密/解密</li>
+<li>base64加密/解密</li>
+</ul>
+</li>
+<li>日期时间组件<ul>
+<li>LocalDateTime的操作集</li>
+<li>Instant的操作集</li>
+</ul>
+</li>
+<li>类型转化组件<ul>
+<li>string 与 int 互转</li>
+<li>string 与 long 互转</li>
+<li>string 与 boolean 互转</li>
+<li>inputstream 转化成 stringbuffer</li>
+<li>inputseream 与 bytes 互转</li>
+<li>string 与 bytes 互转</li>
+<li>json序列化</li>
+<li>json反序列化</li>
+<li>16进制 与 2进制 换转</li>
+</ul>
+</li>
+<li>压缩组件<ul>
+<li>gzip压缩</li>
+<li>gzip解压</li>
+</ul>
+</li>
+<li>其他通用组件<ul>
+<li>获取错误堆栈</li>
+<li>根据ClassName获取实例对象</li>
+</ul>
+</li>
+<li>配置组件<ul>
+<li>获取配置信息</li>
+</ul>
+</li>
+<li>重复尝试组件</li>
+</ul>
+</body>
+</html>

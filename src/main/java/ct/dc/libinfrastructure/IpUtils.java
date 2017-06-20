@@ -43,7 +43,7 @@ public class IpUtils {
         if(StringUtils.isNullOrWhiteSpace(strIPAddress) || !StringUtils.isIPv4(strIPAddress)){
             return null;
         }
-        String[] arrayIP = strIPAddress.split(".");
+        String[] arrayIP = strIPAddress.split("\\.");
         int sip1 = Integer.valueOf(arrayIP[0]);
         int sip2 = Integer.valueOf(arrayIP[1]);
         int sip3 = Integer.valueOf(arrayIP[2]);
@@ -91,11 +91,10 @@ public class IpUtils {
         if(StringUtils.isNullOrWhiteSpace(strIPAddress) || !StringUtils.isIPv4(strIPAddress)){
             return null;
         }
-        String[] ipArr = strIPAddress.split(".");
+        String[] ipArr = strIPAddress.split("\\.");
         if (ipArr.length < 4) {
             return 0L;
         }
-        ipArr = strIPAddress.split(".");
         long p1 = Long.valueOf(ipArr[0]) * 256 * 256 * 256;
         long p2 = Long.valueOf(ipArr[1]) * 256 * 256;
         long p3 = Long.valueOf(ipArr[2]) * 256;

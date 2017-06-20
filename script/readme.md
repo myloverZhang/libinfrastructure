@@ -1,11 +1,8 @@
-大数据组Java公共工具
----
-
 ### 1. Maven接入
 #### 1.1. 仓库源
 修改setting.xml
 ```
-<mirrors>``
+<mirrors>
     <mirror>
         <id>ctdcmaven</id>
         <name>ctdc maven</name>
@@ -20,13 +17,12 @@
 <dependencies>
     <groupId>ct.dc.infrastructure</groupId>
     <artifactId>libinfrastructure</artifactId>
-    <version>1.0.1-RELEASE</version>
+    <version>1.2.2-RELEASE</version>
 </dependencies>
 ```
 
 
-## 2. 版本说明
-### **1.0.0** [2017-03-17]
+## 2. 功能说明
 + IP组件
     + 获取IPv4
     + ip与long之间互转
@@ -64,3 +60,4 @@
     + 根据ClassName获取实例对象
 + 配置组件
     + 获取配置信息
++ 重复尝试组件

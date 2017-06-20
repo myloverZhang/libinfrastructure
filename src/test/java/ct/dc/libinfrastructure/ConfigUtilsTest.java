@@ -11,8 +11,8 @@ import static org.junit.Assert.*;
 public class ConfigUtilsTest {
     @Test
     public void getConfig() throws Exception {
-        System.out.println(RuntimeSystemUtils.getProjectRootPath());
-        ConfigUtils utils = new ConfigUtils("sss");
-        System.out.println(utils.getConfig("a", "null-null"));
+//        System.out.println(RuntimeSystemUtils.getProjectRootPath());
+//        ConfigUtils utils = new ConfigUtils("sss");
+//        System.out.println(utils.getConfig("a", "null-null"));
     }
 }
