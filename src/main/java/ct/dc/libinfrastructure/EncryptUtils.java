@@ -53,6 +53,7 @@ public class EncryptUtils {
     private static AlgorithmParameterSpec paramSpecAes;    //算法参数
     private static Cipher ecipherAes;                      //加密算法
     private final static String AES_ALGORITHM = "AES";
+    private final static Object AES_LOCK = new Object();
 
     static {
         try {
@@ -75,13 +76,16 @@ public class EncryptUtils {
      */
     public static String aesEncrypt(String msg, String password) throws EncryptException {
         String str = "";
+        byte[] buf;
         try {
             Key keyAes = new SecretKeySpec(ConvertUtils.str2bytes(password), AES_ALGORITHM);
-            //用密钥和一组算法参数初始化此 cipher
-            ecipherAes.init(Cipher.ENCRYPT_MODE, keyAes, paramSpecAes);
-            byte[] bytes = ConvertUtils.str2bytes(msg);
-            //加密并转换成16进制字符串
-            byte[] buf = ecipherAes.doFinal(bytes);
+            synchronized (AES_LOCK) {
+                //用密钥和一组算法参数初始化此 cipher
+                ecipherAes.init(Cipher.ENCRYPT_MODE, keyAes, paramSpecAes);
+                byte[] bytes = ConvertUtils.str2bytes(msg);
+                //加密并转换成16进制字符串
+                buf = ecipherAes.doFinal(bytes);
+            }
             str = base64Encode(buf);
         } catch (BadPaddingException e) {
             throw new EncryptException("BadPaddingException", e);
@@ -105,9 +109,11 @@ public class EncryptUtils {
     public static String aesDecrypt(String value, String password) throws EncryptException {
         try {
             Key keyAes = new SecretKeySpec(ConvertUtils.str2bytes(password), AES_ALGORITHM);
-            ecipherAes.init(Cipher.DECRYPT_MODE, keyAes, paramSpecAes);
-            byte[] bytes = base64Decode(value);
-            return ConvertUtils.bytes2str(ecipherAes.doFinal(bytes));
+            synchronized (AES_LOCK) {
+                ecipherAes.init(Cipher.DECRYPT_MODE, keyAes, paramSpecAes);
+                byte[] bytes = base64Decode(value);
+                return ConvertUtils.bytes2str(ecipherAes.doFinal(bytes));
+            }
         } catch (BadPaddingException e) {
             throw new EncryptException("BadPaddingException", e);
         } catch (InvalidKeyException e) {
