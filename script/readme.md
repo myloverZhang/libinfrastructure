@@ -17,7 +17,7 @@
 <dependencies>
     <groupId>ct.dc.infrastructure</groupId>
     <artifactId>libinfrastructure</artifactId>
-    <version>1.2.2-RELEASE</version>
+    <version>1.2.3-RELEASE</version>
 </dependencies>
 ```
 
