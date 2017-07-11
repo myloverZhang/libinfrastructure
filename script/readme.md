@@ -17,7 +17,7 @@
 <dependencies>
     <groupId>ct.dc.infrastructure</groupId>
     <artifactId>libinfrastructure</artifactId>
-    <version>1.2.3-RELEASE</version>
+    <version>1.3.0-RELEASE</version>
 </dependencies>
 ```
 
@@ -43,6 +43,7 @@
     + LocalDateTime的操作集
     + Instant的操作集
 + 类型转化组件
+    + object 与 bytes 互转
     + string 与 int 互转
     + string 与 long 互转
     + string 与 boolean 互转

@@ -14,6 +14,32 @@ import java.util.Objects;
  * 类型转换工具
  */
 public class ConvertUtils {
+    /**
+     * 对象转化成二进制数组
+     *
+     * @param obj
+     * @return
+     * @throws IOException
+     */
+    public static byte[] obj2bytes(Object obj) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(bos);
+        oos.writeObject(obj);
+        return bos.toByteArray();
+    }
+
+    /**
+     * 二进制数组转化成对象
+     *
+     * @param bytes
+     * @param <T>
+     * @return
+     */
+    public static <T> T bytes2obj(byte[] bytes) throws IOException, ClassNotFoundException {
+        ByteArrayInputStream bin = new ByteArrayInputStream(bytes);
+        ObjectInputStream ois = new ObjectInputStream(bin);
+        return (T)ois.readObject();
+    }
 
     /**
      * 字符串转化成int
