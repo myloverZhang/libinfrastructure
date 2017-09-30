@@ -83,4 +83,7 @@ public class StringUtils {
         final Pattern pattern = Pattern.compile(patternStr);
         return pattern.matcher(str).matches();
     }
+    private static String test(){
+        return "";
+    }
 }

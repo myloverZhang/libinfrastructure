@@ -5,6 +5,8 @@
 
 package ct.dc.libinfrastructure;
 
+import ct.dc.libinfrastructure.exception.ConfigNotFoundException;
+
 import java.io.FileInputStream;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -107,7 +109,23 @@ public class ConfigUtils {
         }
         return value;
     }
-
+    /**
+     * 通过配置key获取配置信息
+     * @param key
+     * @return
+     */
+    public String getConfig(String key) throws ConfigNotFoundException {
+        String value;
+        if(this.resourceConfig) {
+            value = getStringFromResource(key);
+        }else{
+            value = getStringFromProperties(key);
+        }
+        if(StringUtils.isNullOrWhiteSpace(value)){
+            throw new ConfigNotFoundException(String.format("key:%d 配置属性未找到",key));
+        }
+        return value;
+    }
     /**
      * 从资源配置文件中获取配置值
      * @param key

@@ -1,18 +1,33 @@
 /**
- * @author:      wangzs
- * @createDate:  2017/03/15
+ * @author: wangzs
+ * @createDate: 2017/03/15
  */
 
 package ct.dc.libinfrastructure;
 
+import com.alibaba.fastjson.JSON;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import sun.security.krb5.internal.PAData;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,214 +35,169 @@ import java.util.Map;
  */
 public class HttpUtils {
 
-    /**
-     * 访问方式
-     */
-    private enum MethodEnums {
-        /**
-         * get访问
-         */
-        GET,
-        /**
-         * post访问
-         */
-        POST,
-        /**
-         * put访问
-         */
-        PUT,
-        /**
-         * delete访问
-         */
-        DELETE;
-    }
-
 
     /**
-     * get访问，返回字符串结果
-     * @param urlStr
-     * @param parms
-     * @param encoding
+     * 默认请求头
      */
-    public static String sendGet2String(String urlStr, HashMap<String,String> parms, String encoding) throws IOException {
-        if(StringUtils.isNullOrWhiteSpace(urlStr)){
-            return null;
+    private final static HashMap<String,String> DEFAULT_HEADER = new HashMap(){
+        {
+            put("Accept","application/json");
+            put("Content-Type","application/json;charset=UTF-8");
         }
-        String urlFull = getUrlWithParams(urlStr, parms, encoding);
-        HttpURLConnection httpUrlConn = getHttpURLConn(urlFull, MethodEnums.GET);
-        httpUrlConn.connect();
-        try {
-            StringBuffer buffer = getStringBuffer(httpUrlConn, encoding);
-            return buffer.toString();
-        }finally {
-            httpUrlConn.disconnect();
-        }
-    }
-
+    };
     /**
-     * get访问，返回字符串结果 (默认utf8编码)
-     * @param urlStr
-     * @param parms
-     */
-    public static String sendGet2String(String urlStr, HashMap<String,String> parms) throws IOException {
-        return sendGet2String(urlStr, parms, ConstantResource.ENCODING_UTF8);
-    }
-
-    /**
-     * get访问，返回InputStream
-     * @param urlStr
-     * @param parms
-     * @param encoding
-     */
-    public static InputStream sendGet2IO(String urlStr, HashMap<String,String> parms, String encoding) throws IOException {
-        if(StringUtils.isNullOrWhiteSpace(urlStr)){
-            return null;
-        }
-        String urlFull = getUrlWithParams(urlStr, parms, encoding);
-        HttpURLConnection httpUrlConn = getHttpURLConn(urlFull, MethodEnums.GET);
-        httpUrlConn.connect();
-        try {
-            return httpUrlConn.getInputStream();
-        }finally {
-            httpUrlConn.disconnect();
-        }
-    }
-
-    /**
-     * post访问，返回InputStream (默认utf8编码)
-     * @param urlStr
-     * @param parms
-     */
-    public static InputStream sendPost2IO(String urlStr, HashMap<String,String> parms) throws IOException {
-        return sendGet2IO(urlStr, parms, ConstantResource.ENCODING_UTF8);
-    }
-
-
-    /**
-     * post访问，返回InputStream
-     * @param urlStr
-     * @param parms
-     * @param encoding
-     */
-    public static InputStream sendPost2IO(String urlStr, String parms, String encoding) throws IOException {
-        if(StringUtils.isNullOrWhiteSpace(urlStr)){
-            return null;
-        }
-        HttpURLConnection httpUrlConn = getHttpURLConn(urlStr, MethodEnums.POST);
-        httpUrlConn.connect();
-        try {
-            try(OutputStreamWriter out = new OutputStreamWriter(httpUrlConn.getOutputStream(), encoding)) {
-                out.write(parms);
-                out.flush();
-                return httpUrlConn.getInputStream();
-            }
-        }finally {
-            httpUrlConn.disconnect();
-        }
-    }
-
-    /**
-     * get访问，返回InputStream (默认utf8编码)
-     * @param urlStr
-     * @param parms
-     */
-    public static InputStream sendGet2IO(String urlStr, String parms) throws IOException {
-        return sendPost2IO(urlStr, parms, ConstantResource.ENCODING_UTF8);
-    }
-
-    /**
-     * post访问，返回InputStream (默认utf8编码)
-     * @param urlStr
-     * @param parms
-     */
-    public static String sendPost2String(String urlStr, String parms) throws IOException {
-        return sendPost2String(urlStr, parms, ConstantResource.ENCODING_UTF8);
-    }
-
-
-    /**
-     * post访问，返回InputStream
-     * @param urlStr
-     * @param parms
-     * @param encoding
-     */
-    public static String sendPost2String(String urlStr, String parms, String encoding) throws IOException {
-        if(StringUtils.isNullOrWhiteSpace(urlStr)){
-            return null;
-        }
-        HttpURLConnection httpUrlConn = getHttpURLConn(urlStr, MethodEnums.POST);
-        httpUrlConn.connect();
-        try {
-            try(OutputStreamWriter out = new OutputStreamWriter(httpUrlConn.getOutputStream(), encoding)) {
-                out.write(parms);
-                out.flush();
-                StringBuffer buffer = getStringBuffer(httpUrlConn, encoding);
-                return buffer.toString();
-            }
-        }finally {
-            httpUrlConn.disconnect();
-        }
-    }
-
-    /**
-     * 获取待参数的url
-     * @param urlStr
-     * @param parms
-     * @param encoding
+     * 无参 get请求
+     * @param uri
      * @return
-     * @throws UnsupportedEncodingException
      */
-    private static String getUrlWithParams(String urlStr, HashMap<String, String> parms, String encoding) throws UnsupportedEncodingException {
-        StringBuilder urlFull = new StringBuilder(urlStr);
-        if(parms != null){
-            if(urlFull.indexOf("?") < 0) {
-                urlFull.append("?");
-            }else{
-                urlFull.append("&");
-            }
-            for(Map.Entry<String,String> entry : parms.entrySet()){
-                String key = URLEncoder.encode(entry.getKey(), encoding);
-                String value = URLEncoder.encode(entry.getValue(), encoding);
-                urlFull.append(String.format("%s=%s&",key,value));
-            }
-        }
-        return urlFull.toString();
+    public static String get(String uri) throws IOException {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpGet get = new HttpGet(uri);
+        CloseableHttpResponse response = httpClient.execute(get);
+        HttpEntity entity = response.getEntity();
+        String result = EntityUtils.toString(entity, "UTF-8");
+        return result;
     }
 
     /**
-     * 将返回的输入流转换成字符串
-     * @param httpUrlConn
-     * @param encoding
+     * 带参 get请求
+     * @param uri
+     * @param params
      * @return
      * @throws IOException
      */
-    private static StringBuffer getStringBuffer(HttpURLConnection httpUrlConn, String encoding) throws IOException {
-        StringBuffer buffer = new StringBuffer();
-        try(InputStream inputStream = httpUrlConn.getInputStream()) {
-            return ConvertUtils.inputStream2StringBuffer(inputStream, encoding);
-        }
+    public static String get(String uri, Map<String, String> params) throws IOException {
+        return get(getUri(uri, params));
     }
-
     /**
-     * 获取url连接对象
-     * @param urlStr
-     * @param method
+     * 带参 get请求
+     * @param uri
+     * @param params
      * @return
      * @throws IOException
      */
-    private static HttpURLConnection getHttpURLConn(String urlStr, MethodEnums method) throws IOException {
-        URL url = new URL(urlStr);
-        HttpURLConnection httpUrlConn = (HttpURLConnection) url.openConnection();
+    public static String get(String uri, Map<String, String> params,Map<String,String> headers) throws IOException {
+        CloseableHttpClient client = HttpClients.createDefault();
+        HttpGet getMethod = new HttpGet(getUri(uri,params));
+        getMethod.setHeaders(createHeaders(headers));
+        CloseableHttpResponse response = client.execute(getMethod);
+        HttpEntity entity = response.getEntity();
+        return EntityUtils.toString(entity);
+    }
 
-        if(method == MethodEnums.GET) {
-            httpUrlConn.setDoOutput(false);
-        }else{
-            httpUrlConn.setDoOutput(true);
+    /**
+     * post
+     * @param uri
+     * @param params
+     * @param headers
+     * @return
+     */
+    public static String post(String uri,Map<String,Object> params, Map<String,String> headers) throws IOException {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost postMethod = new HttpPost(uri);
+        postMethod.setEntity(new StringEntity(JsonUtils.jsonSerialize(params)));
+        postMethod.setHeaders(createHeaders(headers));
+        CloseableHttpResponse response = httpClient.execute(postMethod);
+        String result = EntityUtils.toString(response.getEntity());
+        return result;
+    }
+
+    /**
+     * post
+     * @param uri
+     * @param content
+     * @param headers
+     * @return
+     * @throws IOException
+     */
+    public static String post(String uri,String content,Map<String,String> headers) throws IOException {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost post = new HttpPost(uri);
+        post.setEntity(new StringEntity(content));
+        post.setHeaders(createHeaders(headers));
+        CloseableHttpResponse response = httpClient.execute(post);
+        String result = EntityUtils.toString(response.getEntity());
+        return result;
+}
+
+    /**
+     * post
+     * @param uri
+     * @param content
+     * @return
+     * @throws IOException
+     */
+    public static String post(String uri,String content) throws IOException {
+        return post(uri,content,DEFAULT_HEADER);
+    }
+
+    /**
+     * 不自定义头的参数
+     * 默认header
+     * Accept : application/json
+     * ContentType:application/json;charset=UTF-8
+     * @param uri
+     * @param params
+     * @return
+     * @throws IOException
+     */
+    public static String post(String uri,Map<String,Object> params) throws IOException {
+        return post(uri,params,DEFAULT_HEADER);
+    }
+
+    /**
+     * 无参post请求
+     * @param uri
+     * @return
+     */
+    public static String post(String uri) throws IOException {
+        return post(uri,new HashMap(),DEFAULT_HEADER);
+    }
+
+
+//    /**
+//     * 创建entity
+//     * @param params
+//     * @return
+//     * @throws UnsupportedEncodingException
+//     */
+//    private static UrlEncodedFormEntity createEntity(Map<String,Object> params) throws UnsupportedEncodingException {
+//        List<NameValuePair> nameValuePairs = new ArrayList<>();
+//        for (Map.Entry<String,Object> entry:params.entrySet()){
+//            NameValuePair nameValuePair = new BasicNameValuePair(entry.getKey(),entry.getValue().toString());
+//            nameValuePairs.add(nameValuePair);
+//        }
+//        return new UrlEncodedFormEntity(nameValuePairs);
+//    }
+    /**
+     * 创建头信息
+     * @param maps
+     * @return
+     */
+    private static Header[] createHeaders(Map<String,String> maps){
+        Header[] hears = new Header[maps.size()];
+        int count = 0;
+        for(Map.Entry<String,String> entry:maps.entrySet()){
+            hears[count++] = new BasicHeader(entry.getKey(),entry.getValue());
         }
-        httpUrlConn.setDoInput(true);
-        httpUrlConn.setUseCaches(false);
-
-        httpUrlConn.setRequestMethod(method.name().toUpperCase());
-        return httpUrlConn;
+        return hears;
+    }
+    /**
+     * 组装get 请求的uri
+     * @param uri
+     * @param params
+     * @return
+     */
+    private static String getUri(String uri,Map<String,String> params){
+        boolean flag = true;
+        for (Map.Entry<String, String> map : params.entrySet()) {
+            if (flag) {
+                uri = String.format("%s?%s=%s", uri, map.getKey(), map.getValue());
+                flag = false;
+            } else {
+                uri = String.format("%s&%s=%s", uri, map.getKey(), map.getValue());
+            }
+        }
+        return uri;
     }
 }
