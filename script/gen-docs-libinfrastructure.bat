@@ -1,0 +1,2 @@
+del /F /S /Q  ../doc/*
+javadoc -d ../doc ../src/main/java/ct/dc/libinfrastructure/*.java ../src/main/java/ct/dc/libinfrastructure/retry/*.java ../src/main/java/ct/dc/libinfrastructure/exception/*.java ../src/main/java/ct/dc/libinfrastructure/common/*.java -author -notree -nodeprecatedlist -charset utf-8 -encoding utf-8 -helpfile readme.html

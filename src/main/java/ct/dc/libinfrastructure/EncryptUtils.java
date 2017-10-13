@@ -6,7 +6,6 @@
 
 package ct.dc.libinfrastructure;
 
-import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 import ct.dc.libinfrastructure.exception.EncryptException;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;

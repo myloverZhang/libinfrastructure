@@ -1,5 +1,6 @@
 package ct.dc.libinfrastructure;
 
+import ct.dc.libinfrastructure.common.UserInfo;
 import org.apache.commons.digester.Digester;
 import org.junit.Assert;
 import org.junit.Test;
@@ -17,6 +18,30 @@ import static org.junit.Assert.*;
  * Created by will on 17-3-17.
  */
 public class HttpUtilsTest {
+    HashMap<String,String> headers = new HashMap<String,String>(){
+        {
+            put("Accept","application/json");
+            put("Content-Type","application/json;charset=UTF-8");
+        }
+    };
+    @Test
+    public void delete() throws Exception {
+        String uri = "http://localhost:8080/api/test/delete?id=444";
+
+        String result = HttpUtils.delete(uri,headers);
+        System.out.println(result);
+        assert result!=null;
+    }
+
+    @Test
+    public void put() throws Exception {
+        String uri = "http://localhost:8080/api/test/put";
+        SchoolInfo info = new SchoolInfo("ASDF","FAWEF");
+        String result = HttpUtils.put(uri,JsonUtils.jsonSerialize(info),headers);
+        System.out.println(result);
+        assert result!=null;
+    }
+
     @Test
     public void post3() throws Exception {
         String uri = "http://bizsyssvc.ct108.org:2047/TcManageCenter.asmx";
@@ -152,7 +177,7 @@ public class HttpUtilsTest {
     private UserInfo getUserInfo(String content){
         String baseStr = "soap:Envelope/soap:Body/GetCookieAdminUserInfoResponse/GetCookieAdminUserInfoResult";
         Digester digester = new Digester();
-        digester.addObjectCreate(baseStr,"ct.dc.libinfrastructure.UserInfo");
+        digester.addObjectCreate(baseStr,"ct.dc.libinfrastructure.common.UserInfo");
         digester.addBeanPropertySetter(String.format("%s/InUseBeginTime",baseStr),"inUseBeginTime");
         digester.addBeanPropertySetter(String.format("%s/ID",baseStr),"id");
         digester.addBeanPropertySetter(String.format("%s/UserName",baseStr),"userName");
@@ -163,7 +188,7 @@ public class HttpUtilsTest {
         digester.addBeanPropertySetter(String.format("%s/TrueName",baseStr),"trueName");
         digester.addBeanPropertySetter(String.format("%s/OverdueTime",baseStr), "overDueTime");
         try {
-                return  (UserInfo)digester.parse(new ByteArrayInputStream(content.getBytes()));
+            return  (UserInfo)digester.parse(new ByteArrayInputStream(content.getBytes(ConstantResource.ENCODING_UTF8)));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (SAXException e) {

@@ -11,9 +11,8 @@ import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.*;
+import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -25,6 +24,8 @@ import sun.security.krb5.internal.PAData;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -103,6 +104,40 @@ public class HttpUtils {
     }
 
     /**
+     * http  delete请求
+     *
+     * @param uri
+     * @param headers
+     * @return
+     * @throws IOException
+     */
+    public static String delete(String uri,Map<String,String> headers) throws IOException {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpDelete httpDelete = new HttpDelete(uri);
+        httpDelete.setHeaders(createHeaders(headers));
+        CloseableHttpResponse response = httpClient.execute(httpDelete);
+        String result = EntityUtils.toString(response.getEntity());
+        return result;
+    }
+
+    /**
+     * http put
+     * @param uri
+     * @param content
+     * @param headers
+     * @return
+     * @throws IOException
+     */
+    public static String put(String uri,String content,Map<String,String> headers) throws IOException {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPut httpPut = new HttpPut(uri);
+        httpPut.setHeaders(createHeaders(headers));
+        httpPut.setEntity(new StringEntity(content));
+        CloseableHttpResponse response = httpClient.execute(httpPut);
+        String result = EntityUtils.toString(response.getEntity());
+        return result;
+    }
+    /**
      * post
      * @param uri
      * @param content
@@ -110,9 +145,10 @@ public class HttpUtils {
      * @return
      * @throws IOException
      */
-    public static String post(String uri,String content,Map<String,String> headers) throws IOException {
+    public static String post(String uri,String content,Map<String,String> headers) throws IOException, URISyntaxException {
         CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost post = new HttpPost(uri);
+        URI postUri = new URI(uri);
+        HttpPost post = new HttpPost(postUri);
         post.setEntity(new StringEntity(content));
         post.setHeaders(createHeaders(headers));
         CloseableHttpResponse response = httpClient.execute(post);
@@ -127,7 +163,7 @@ public class HttpUtils {
      * @return
      * @throws IOException
      */
-    public static String post(String uri,String content) throws IOException {
+    public static String post(String uri,String content) throws IOException, URISyntaxException {
         return post(uri,content,DEFAULT_HEADER);
     }
 
@@ -189,6 +225,8 @@ public class HttpUtils {
      * @return
      */
     private static String getUri(String uri,Map<String,String> params){
+        if (params== null)
+            return uri;
         boolean flag = true;
         for (Map.Entry<String, String> map : params.entrySet()) {
             if (flag) {

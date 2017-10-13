@@ -23,6 +23,15 @@
 
 
 ## 2. 功能说明
++ 二进制数组组件
+    + byte[] 和 object之间转换
+    + byte[] 和 string(hexString)之间的转换
++ 公共组件
+    + 获取栈信息
++ 数据压缩组件
+    + gzip 方式
+    + deflate方式
+    + snappy方式 
 + IP组件
     + 获取IPv4
     + ip与long之间互转
@@ -35,30 +44,46 @@
 + Http通讯组件
     + Http GET操作
     + Http Post操作
+    + Http Delete操作
+    + Http Put 操作
 + 加密组件
-    + md5加密
+    + md5加密、文件加密
     + aes加密/解密
     + base64加密/解密
+    + des加密/解密
+    + sha1
+    + sha256
 + 日期时间组件
     + LocalDateTime的操作集
     + Instant的操作集
-+ 类型转化组件
-    + object 与 bytes 互转
++ 基本类型转化组件
     + string 与 int 互转
     + string 与 long 互转
     + string 与 boolean 互转
-    + inputstream 转化成 stringbuffer
-    + inputseream 与 bytes 互转
-    + string 与 bytes 互转
-    + json序列化
-    + json反序列化
-    + 16进制 与 2进制 换转
-+ 压缩组件
-    + gzip压缩
-    + gzip解压
-+ 其他通用组件
-    + 获取错误堆栈
-    + 根据ClassName获取实例对象
 + 配置组件
     + 获取配置信息
 + 重复尝试组件
++ 邮件Email组件
+    + 发送电子邮件（附件）
++ 文件组件
+    + 读
+    + 写
+    + 文件增/删除
++ Json序列化组件
+    + json序列化
++ 随机字符串组件
+    + 随机数生成
+    + 随机字符串
+    + 随机数字字符串
+    + 随机指定字符串
++ 反射组件
+    + 获取类属性
+    + 获取类方法
+    + 设置属性
+    + 方法调用
++ 流组件
+    + stream转换
++ 同城游用户校验组件
+    + 校验是否用户登录
++ Zip组件
+    + zip解压/压缩

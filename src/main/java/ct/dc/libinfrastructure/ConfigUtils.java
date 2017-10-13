@@ -62,7 +62,6 @@ public class ConfigUtils {
     /**
      * 初始化配置文件
      * @param configFileName
-     * @param isResourceConfig
      */
     public ConfigUtils(String configFileName, ConfigTypeEnums configTypeEnums){
         this.configFileName = configFileName;
