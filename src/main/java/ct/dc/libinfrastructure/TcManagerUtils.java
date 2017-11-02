@@ -69,7 +69,7 @@ public class TcManagerUtils {
      * @param request
      * @return
      */
-    public static boolean getUserInfoWithCookie(int platformID, String credential,HttpServletRequest request){
+    public static boolean getUserInfoWithCookie(int platformID, String credential, HttpServletRequest request){
         Cookie[] cookies = request.getCookies();
         if (cookies == null)
             return false;
@@ -97,7 +97,48 @@ public class TcManagerUtils {
         return false;
     }
 
+    /**
+     * 获取同城游用户信息
+     * @param platformID
+     * @param credential
+     * @param request
+     * @return
+     */
+    public static UserInfo getTcUserInfo(int platformID, String credential,HttpServletRequest request){
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null)
+            return null;
+        String cookieValue = "";
+        for (Cookie cookie:cookies){
+            if (cookie.getName().equals(ADMIN_USER_INFO_COOKIE_NAME))
+                cookieValue = cookie.getValue();
+            break;
+        }
+        if (cookieValue.equals(""))
+            return null;
+        String content = String.format(USER_INFO_WITH_COOKIE_METHOD,platformID,credential,cookieValue);
+        try {
+            String result = HttpUtils.post(TC_MANAGER_URI,content,TEXT_XML_HEADER);
+            UserInfo info = getUserInfo(result);
+            if (info!=null&&info.getId()>0)
+                return info;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }catch (URISyntaxException e){
+            e.printStackTrace();
+            return null;
+        }
+        return null;
+    }
+
+    /**
+     * 获取用户信息
+     * @param content
+     * @return
+     */
     private static UserInfo getUserInfo(String content){
+        System.out.println(content);
         String baseStr = "soap:Envelope/soap:Body/GetCookieAdminUserInfoResponse/GetCookieAdminUserInfoResult";
         Digester digester = new Digester();
         digester.addObjectCreate(baseStr,"ct.dc.libinfrastructure.common.UserInfo");
@@ -112,7 +153,7 @@ public class TcManagerUtils {
         digester.addBeanPropertySetter(String.format("%s/TrueName",baseStr),"trueName");
         digester.addBeanPropertySetter(String.format("%s/OverdueTime",baseStr), "overDueTime");
         try {
-            return  (UserInfo)digester.parse(new ByteArrayInputStream(content.getBytes()));
+            return  (UserInfo)digester.parse(new ByteArrayInputStream(content.getBytes(ConstantResource.ENCODING_UTF8)));
         } catch (IOException e) {
             e.printStackTrace();
             return null;

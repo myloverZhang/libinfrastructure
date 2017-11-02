@@ -68,7 +68,6 @@ public class FileUtils implements Closeable{
      *
      * @param content
      * @param isAppend
-     * @return
      */
     public void writeLine(String content,boolean isAppend) throws IOException {
         write(String.format("%s\n",content), isAppend);
@@ -164,7 +163,6 @@ public class FileUtils implements Closeable{
     /**
      * 删除文件
      * @param filePath
-     * @return
      */
     public static void deleteFile(String filePath){
         File file = new File(filePath);

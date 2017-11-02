@@ -8,7 +8,7 @@ import java.io.*;
 public class ByteUtils {
     /**
      * 二进制数组转换成16进制字符串
-     * @param bytes
+     * @param bytes 二进制数组
      * @return
      */
     public static String bytes2hexStr(byte[] bytes){
@@ -25,7 +25,7 @@ public class ByteUtils {
 
     /**
      * 十六进制字符串转二进制数组
-     * @param hexStr
+     * @param hexStr 十六进制字符串
      * @return
      */
     public static byte[] hexStr2bytes(String hexStr){
@@ -42,8 +42,8 @@ public class ByteUtils {
 
     /**
      * 二进制数组转换成字符串
-     * @param bytes
-     * @param encoding
+     * @param bytes 二进制数组
+     * @param encoding 编码方式
      * @return
      * @throws UnsupportedEncodingException
      */
@@ -55,7 +55,7 @@ public class ByteUtils {
 
     /**二进制数组转换成字符串
      *
-     * @param bytes
+     * @param bytes 二进制数组
      * @return
      * @throws UnsupportedEncodingException
      */
@@ -64,7 +64,8 @@ public class ByteUtils {
     }
     /**
      * 字符串转成二进制数组
-     * @param str
+     * @param str  被转换字符串
+     * @param encoding 编码方式
      * @return
      */
     public static byte[] str2bytes(String str, String encoding) throws UnsupportedEncodingException {
@@ -76,7 +77,7 @@ public class ByteUtils {
 
     /**
      * 字符串转换成二进制数组
-     * @param str
+     * @param str 字符串
      * @return
      */
     public static byte[] str2bytes(String str) throws UnsupportedEncodingException {

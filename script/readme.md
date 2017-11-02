@@ -17,7 +17,7 @@
 <dependencies>
     <groupId>ct.dc.infrastructure</groupId>
     <artifactId>libinfrastructure</artifactId>
-    <version>1.3.0-RELEASE</version>
+    <version>2.0.6-RELEASE</version>
 </dependencies>
 ```
 
@@ -87,3 +87,25 @@
     + 校验是否用户登录
 + Zip组件
     + zip解压/压缩
+    
+## 3. 相关配置说明
++   邮件配置
+    + 配置文件名
+        email.properties(存放路径自定义)
+    + 内容
+          
+            
+          mail.type=smtp  简单邮件传输协议
+          mail.smtp.auth=true   是否授权
+          mail.smtp.host=smtp.qq.com 服务器地址
+          mail.smtp.port=465   端口
+          mail.sender.username=shushoufu@qq.com 发送用户名
+          mail.sender.password=nbnostkhpvtebjbi 密码/授权码
+          mail.debug=true 是否debug
+    
++   同城游用户管理组件配置
+    + 配置文件路径
+        {user.dir}/config/tcManager.properties
+    + 配置文件内容
+        
+            tcManager.uri=http://bizsyssvc.ct108.org:2047/TcManageCenter.asmx

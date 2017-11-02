@@ -5,15 +5,14 @@
 
 package ct.dc.libinfrastructure;
 
-import ct.dc.libinfrastructure.exception.DeflateCompressLevelException;
-import org.xerial.snappy.Snappy;
 
+import org.xerial.snappy.Snappy;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.*;
-
+import ct.dc.libinfrastructure.exception.DeflateCompressLevelException;
 /**
  * 压缩序列化工具类
  */
@@ -21,8 +20,8 @@ public class CompressedUtils {
 
     /**
      * gzip解压
-     *
      * @param inStr
+     * @param encoding
      * @return
      * @throws IOException
      */
